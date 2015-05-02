@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading;
+using Ninject;
 
 namespace DIContainer.Commands
 {
@@ -13,19 +15,6 @@ namespace DIContainer.Commands
         }
 
         public override void Execute()
-        {
-            var timeout = TimeSpan.FromMilliseconds(arguments.GetInt(0));
-            Console.WriteLine("Waiting for " + timeout);
-            Thread.Sleep(timeout);
-            Console.WriteLine("Done!");
-        }
-    }
-
-    public class HelpCommand : BaseCommand
-    {
-        public HelpCommand()
-   
-         public override void Execute()
         {
             var timeout = TimeSpan.FromMilliseconds(arguments.GetInt(0));
             Console.WriteLine("Waiting for " + timeout);

@@ -1,9 +1,28 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Configuration;
 using DIContainer.Commands;
 using Ninject;
 namespace DIContainer
 {
+    public class HelpCommand : BaseCommand
+    {
+        private Lazy<ICommand[]> comands;
+
+        public HelpCommand(Lazy<ICommand[]> comands)
+        {
+            this.comands = comands;
+        }
+
+        public override void Execute()
+        {
+            foreach (var comand in comands.Value)
+            {
+                Console.WriteLine(comand.Name);
+            }
+        }
+    }
+
     public class Program
     {
         private readonly CommandLineArgs arguments;
@@ -21,7 +40,7 @@ namespace DIContainer
             var container = new StandardKernel();
             container.Bind<ICommand>().To<TimerCommand>();
             container.Bind<ICommand>().To<PrintTimeCommand>();
-            container.Bind<ICommand>().ToConstant<HelpCommand
+            container.Bind<ICommand>().To<HelpCommand>();
             container.Bind<CommandLineArgs>().ToConstant(new CommandLineArgs(args));
 
             //var arguments = new CommandLineArgs(args);
