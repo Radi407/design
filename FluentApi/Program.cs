@@ -43,8 +43,21 @@ namespace FluentTask
                             Thread.Sleep(1000);
                         }
                         Console.ReadKey();
+                        Console.WriteLine("I finished");
+                        Thread.Sleep(2000);
                     }
                     );
+            }
+            else
+            {
+                while (!Console.KeyAvailable)
+                {
+                    function(this);
+                    Thread.Sleep(1000);
+                }
+                Console.ReadKey();
+                Console.WriteLine("I finished");
+                Thread.Sleep(2000);
             }
             return this;
         }
@@ -100,6 +113,7 @@ namespace FluentTask
                 .Delay(TimeSpan.FromSeconds(1))
                 .Say("Кто здесь?!")
                 .Delay(TimeSpan.FromMilliseconds(2000));
+            behaviour.UntilKeyPressed(c => c.UntilKeyPressed(b => b.Say("Recursive until")));
             Console.WriteLine("start");
             behaviour.Execute();
             behaviour.Execute();
