@@ -18,36 +18,37 @@ namespace FluentTask
 
         public Behavior Say(string replic)
         {
-            if (FinalActions.Count != 0)
-                Console.WriteLine(replic);
-            Actions.Add(()=>Console.WriteLine(replic));
+            Actions.Add(
+                () =>
+                Console.WriteLine(replic)
+                );
             
             return this;
         }
 
         public Behavior UntilKeyPressed(Func<Behavior, Behavior> function)
         {
-            if (FinalActions.Count != 0)
-            {
-                while (!Console.KeyAvailable)
+            Actions.Add(
+                () =>
                 {
-                    function(this);
-                    Thread.Sleep(500);
+                    while (!Console.KeyAvailable)
+                    {
+                        function(this);
+                        Thread.Sleep(500);
+                    }
+                    Console.ReadKey();
                 }
-                Console.ReadKey();
-            }
-            Actions.Add(() => UntilKeyPressed(function));
+                );
             return this;
         }
 
 
         public Behavior Delay(TimeSpan time)
         {
-            if (FinalActions.Count != 0)
-            {
-                Thread.Sleep(time);
-            }
-            Actions.Add(()=>Thread.Sleep(time));
+            Actions.Add(
+                () =>
+                    Thread.Sleep(time)
+                );
             return this;
         }
 
