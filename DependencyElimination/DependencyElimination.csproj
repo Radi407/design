@@ -48,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PageManager.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="FileWriter.cs" />
+    <Compile Include="PageParser.cs" />
+    <Compile Include="PageReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

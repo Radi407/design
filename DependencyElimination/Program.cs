@@ -9,17 +9,31 @@ namespace DependencyElimination
 		private static void Main(string[] args)
 		{
 			var sw = Stopwatch.StartNew();
-			using (var manager = new PageManager("links.txt"))
+			using (var writer = new FileWriter("links.txt"))
+			using (var reader = new PageReader())
 			{
-					for (int page = 1; page < 6; page++)
-					{
-					    var information = manager.Read(page);
-					    totalLinks += manager.Write(information);
-					}
+			    var source = "http://habrahabr.ru/top/page";
+			    for (int page = 1; page < 6; page++)
+			    {
+			        var url =source + page;
+			        Logger.WriteLine(url);
+			        var content = reader.ReadPage(url);
+			        if (content.Item1 == null)
+			        {
+			            Logger.WriteLine(content.Item2);
+			        }
+			        else
+			        {
+			            var links = PageParser.GetLinks(content.Item1);
+                        Logger.WriteLine("Found {0} links",links.Length);
+			            totalLinks += links.Length;
+			            writer.Write(links);
+			        }
+			    }
 			}
-			Console.WriteLine("Total links found: {0}", totalLinks);
-			Console.WriteLine("Finished");
-			Console.WriteLine(sw.Elapsed);
+		    Logger.WriteLine("Total links found: {0}", totalLinks);
+			Logger.WriteLine("Finished");
+			Logger.WriteLine(sw.Elapsed.TotalSeconds.ToString());
 		}
 
 		private static int totalLinks = 0;
