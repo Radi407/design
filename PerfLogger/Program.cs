@@ -10,30 +10,29 @@ namespace PerfLogger
 
     class ResultDisposable : IDisposable
     {
-        private readonly Action<long> time;
+        private readonly Action<long> result;
         private readonly Stopwatch watch;
 
-        public  ResultDisposable(Stopwatch inWatch, Action<long> inTime)
+        public  ResultDisposable(Action<long> outputFunction)
         {
             watch = new Stopwatch();
             watch.Start();
-            time = inTime;
+           result = outputFunction;
         }
         
         void System.IDisposable.Dispose()
         {
-            time(watch.ElapsedMilliseconds);
+            result(watch.ElapsedMilliseconds);
         }
     }
 
     class PerfLogger 
     {
-        private static Stopwatch watch;
-        private static ResultDisposable help;
-        public static  IDisposable Measure(Action<long> time )
+        private static ResultDisposable stoppuhr;
+        public static  IDisposable Measure(Action<long> outputFunction )
         {
-            help = new ResultDisposable(watch,time);
-            return help;
+            stoppuhr = new ResultDisposable(outputFunction);
+            return stoppuhr;
         }
 
         
