@@ -7,50 +7,60 @@ namespace FluentTask
 {
     class Behavior
     {
-        private List<Action> FinalActions;
-        private List<Action> Actions; 
+        private List<Action> finalActions;
+        private List<Action> actions; 
 
         public Behavior()
         {
-            FinalActions = new List<Action>();
-            Actions = new List<Action>();
+            finalActions = new List<Action>();
+            actions = new List<Action>();
         }
 
         public Behavior Say(string replic)
         {
-            if(FinalActions.Count!=0)
+            if (finalActions.Count != 0)
                 Console.WriteLine(replic);
-            Actions.Add(
-                () =>
-                Console.WriteLine(replic)
-                );
+            else
+            {
+
+                actions.Add(
+                    () =>
+                        Console.WriteLine(replic)
+                    );
+            }
             return this;
         }
 
         public Behavior UntilKeyPressed(Func<Behavior, Behavior> function)
         {
-            Actions.Add(
-                () =>
-                {
-                    while (!Console.KeyAvailable)
+            if (finalActions.Count == 0)
+            {
+                actions.Add(
+                    () =>
                     {
-                        function(this);
-                        Thread.Sleep(1000);
+                        while (!Console.KeyAvailable)
+                        {
+                            function(this);
+                            Thread.Sleep(1000);
+                        }
+                        Console.ReadKey();
                     }
-                    Console.ReadKey();
-                }
-                );
+                    );
+            }
             return this;
         }
 
 
         public Behavior Delay(TimeSpan time)
         {
-            if (FinalActions.Count != 0) Thread.Sleep(time);
-            Actions.Add(
-                () =>
-                    Thread.Sleep(time)
-                );
+            if (finalActions.Count != 0) Thread.Sleep(time);
+            else
+            {
+                actions.Add(
+                    () =>
+                        Thread.Sleep(time)
+                    );
+            }
             return this;
         }
 
@@ -62,12 +72,14 @@ namespace FluentTask
 
         public void Execute()
         {
-            FinalActions = new List<Action> (Actions);
-            Actions = new List<Action>();
-            foreach (var currentAction in FinalActions)
+            finalActions = new List<Action> (actions);
+            actions = new List<Action>();
+            
+            foreach (var currentAction in finalActions)
                 currentAction();
-            Actions = new List<Action>(FinalActions);
-            FinalActions = new List<Action>();
+            
+            actions = new List<Action>(finalActions);
+            finalActions = new List<Action>();
         }
     }
 
