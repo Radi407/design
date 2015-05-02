@@ -18,11 +18,12 @@ namespace FluentTask
 
         public Behavior Say(string replic)
         {
+            if(FinalActions.Count!=0)
+                Console.WriteLine(replic);
             Actions.Add(
                 () =>
                 Console.WriteLine(replic)
                 );
-            
             return this;
         }
 
@@ -34,7 +35,7 @@ namespace FluentTask
                     while (!Console.KeyAvailable)
                     {
                         function(this);
-                        Thread.Sleep(500);
+                        Thread.Sleep(1000);
                     }
                     Console.ReadKey();
                 }
@@ -45,6 +46,7 @@ namespace FluentTask
 
         public Behavior Delay(TimeSpan time)
         {
+            if (FinalActions.Count != 0) Thread.Sleep(time);
             Actions.Add(
                 () =>
                     Thread.Sleep(time)
@@ -64,31 +66,33 @@ namespace FluentTask
             Actions = new List<Action>();
             foreach (var currentAction in FinalActions)
                 currentAction();
+            Actions = new List<Action>(FinalActions);
+            FinalActions = new List<Action>();
         }
     }
 
-	internal class Program
-	{
-		private static void Main()
-		{
+    internal class Program
+    {
+        private static void Main()
+        {
 
-			var behaviour = new Behavior()
-				.Say("Привет мир!")
-				.UntilKeyPressed(b => b
-					.Say("Ля-ля-ля!")
-					.Say("Тру-лю-лю"))
-				.Jump(JumpHeight.High)
-				.UntilKeyPressed(b => b
-					.Say("Aa-a-a-a-aaaaaa!!!")
-					.Say("[набирает воздух в легкие]"))
-				.Say("Ой!")
-				.Delay(TimeSpan.FromSeconds(1))
-				.Say("Кто здесь?!")
-				.Delay(TimeSpan.FromMilliseconds(2000));
-		    Console.WriteLine("start");
-			behaviour.Execute();
-		    behaviour.Execute();
+            var behaviour = new Behavior()
+                .Say("Привет мир!")
+                .UntilKeyPressed(b => b
+                    .Say("Ля-ля-ля!")
+                    .Say("Тру-лю-лю"))
+                .Jump(JumpHeight.High)
+                .UntilKeyPressed(b => b
+                    .Say("Aa-a-a-a-aaaaaa!!!")
+                    .Say("[набирает воздух в легкие]"))
+                .Say("Ой!")
+                .Delay(TimeSpan.FromSeconds(1))
+                .Say("Кто здесь?!")
+                .Delay(TimeSpan.FromMilliseconds(2000));
+            Console.WriteLine("start");
+            behaviour.Execute();
+            behaviour.Execute();
+        }
 
-		}
-	}
+    }
 }
