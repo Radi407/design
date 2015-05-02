@@ -22,7 +22,6 @@ namespace FluentTask
                 Console.WriteLine(replic);
             else
             {
-
                 actions.Add(
                     () =>
                         Console.WriteLine(replic)
