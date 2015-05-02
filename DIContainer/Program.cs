@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Configuration;
 using DIContainer.Commands;
@@ -8,10 +9,12 @@ namespace DIContainer
     public class HelpCommand : BaseCommand
     {
         private Lazy<ICommand[]> comands;
+        private TextWriter writer;
 
-        public HelpCommand(Lazy<ICommand[]> comands)
+        public HelpCommand(Lazy<ICommand[]> comands,TextWriter writer)
         {
             this.comands = comands;
+            this.writter = writer;
         }
 
         public override void Execute()
@@ -23,16 +26,18 @@ namespace DIContainer
         }
     }
 
-    public class Program
+    public class Program 
     {
         private readonly CommandLineArgs arguments;
         private readonly ICommand[] commands;
+        private TextWriter writter;
 
-        public Program(CommandLineArgs arguments, params ICommand[] commands)
+        public Program(CommandLineArgs arguments,TextWriter writter , params ICommand[] commands)
         {
             this.arguments = arguments;
             this.commands = commands;
-        
+            this.writter = writter;
+
         }
 
         static void Main(string[] args)
