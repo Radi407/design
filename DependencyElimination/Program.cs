@@ -20,6 +20,7 @@ namespace DependencyElimination
                     var url = source + page;
                     var content = reader.ReadPage(url);
                     var links = PageParser.GetLinks(content.Item1);
+                    totalLinks += links.Length;
                     yield return new Tuple<string[], string, string>(links, url, content.Item2);
                 }
             }
@@ -37,7 +38,6 @@ namespace DependencyElimination
                     Logger.WriteLine(linksInPage.Item2);
                     Logger.WriteLine(linksInPage.Item3);
                     Logger.WriteLine("Found {0} links", linksInPage.Item1.Length);
-                    totalLinks += linksInPage.Item1.Length;
                     writer.Write(linksInPage.Item1);
                 }
             }
