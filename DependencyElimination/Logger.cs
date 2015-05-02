@@ -6,7 +6,8 @@ namespace DependencyElimination
     {
         public static void WriteLine(string input,params object[] args)
         {
-            Console.WriteLine(input,args);
+            if(input!=null)
+                Console.WriteLine(input,args);
         }
     }
 }
